@@ -156,27 +156,19 @@ print(f"Numery ze złym zapisem numeru: {len(zapis_numeru)}")
 for nr in zapis_numeru:
     print(nr)
 
-print(
-    f"Numery z nieprawidłowym oznaczeniem OFU gdzie użytek ekologiczny nie jest aktualny: {len(oznaczenie_ofu)}"
-)
+print(f"Numery z nieprawidłowym oznaczeniem OFU gdzie użytek ekologiczny nie jest aktualny: {len(oznaczenie_ofu)}")
 for oz in oznaczenie_ofu:
     print(oz)
 
-print(
-    f"Numery z wartośćą OFU która nie jest powiązana z OZU i OZK: {len(przyjecie_wartosci_ofu)}"
-)
+print(f"Numery z wartośćą OFU która nie jest powiązana z OZU i OZK: {len(przyjecie_wartosci_ofu)}")
 for do in dana_ofu:
     print(do)
 
-print(
-    f"Numery z gruntem który nie podlega gleboznawczej klasyfikacji gruntów: {len(grunt_nie_podlega)}"
-)
+print(f"Numery z gruntem który nie podlega gleboznawczej klasyfikacji gruntów: {len(grunt_nie_podlega)}")
 for gr in grunt_nie_podlega:
     print(gr)
 
-print(
-    f"Numery z nieprawidłowym oznaczeniem OFU gdzie użytek ekologiczny nie jest aktualny: {len(uzytek_ekologiczny)}"
-)
+print(f"Numery z nieprawidłowym oznaczeniem OFU gdzie użytek ekologiczny nie jest aktualny: {len(uzytek_ekologiczny)}")
 for uz in uzytek_ekologiczny:
     print(uz)
 
