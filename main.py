@@ -23,11 +23,11 @@ OZK = ["I", "II", "III", "IV", "V", "VI"]
 OZK1 = ["I", "II", "IIIa", "IIIb", "IVa", "IVb", "V", "VI", "VIz"]
 
 file_path = "drive-download-20241014T084645Z-001/Kontury_eksport_dz.txt"
-with open(file_path, "r", encoding="ISO-8859-1", newline="\r\n") as file:
+with open(file_path, encoding="ISO-8859-1", newline="\r\n") as file:
     data = file.readlines()
 
 
-def podziel(name):
+def podziel(name) -> list:
     p = []
     if "-" not in name:
         p.append(name)
@@ -45,22 +45,23 @@ def pomin(input_string, letters_to_skip):
     return input_string
 
 
-def warunek1(name):
+def warunek1(name) -> bool:
     if name.startswith("R"):
         name = pomin(name, "R")
         for letter in OZK1:
             if letter == name:
                 return True
+        return False
     elif name.startswith(("Ł", "Ps", "Ls", "Lz")):
         name = pomin(name, ("Ł", "Ps", "Ls", "Lz"))
         for letter in OZK:
             if letter == name:
                 return True
-    else:
         return False
+    return False
 
 
-def warunek2(name1, name2):
+def warunek2(name1, name2) -> bool:
     for l in OFU1:
         if l in name1:
             if name2.startswith("R"):
@@ -80,6 +81,7 @@ def warunek2(name1, name2):
                         return True
         else:
             return False
+    return False
 
 
 dzialki = []
