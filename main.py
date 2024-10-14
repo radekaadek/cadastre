@@ -79,11 +79,11 @@ def sprawdz():
     for i in dzialki:
         if i.count('/') != 1:
             bledne.append("{0}  -  Zła składnia nazwy: nieprawidłowa ilość ukośników w nazwie.".format(i))
-            ukosniki.append("{0}  -  Zła składnia nazwy: nieprawidłowa ilość ukośników w nazwie.".format(i))
+            ukosniki.append(i)
             print("Zła ilość ukośników w nazwie: ",i)
-            # pass
         elif ' ' in i:
             bledne.append("{0}  -  Zła składnia nazwy: brak myślnika, odstęp między znakami.".format(i))
+            myslniki.append(i)
             print("Brak myślnika, odstęp między znakami: ", i)
             pass
         else:
@@ -92,6 +92,7 @@ def sprawdz():
             for znak in part0:
                 if not (znak.isnumeric() or znak == '-'):
                     bledne.append("{0}  -  Zły zapis numeru punktu.".format(i))
+                    zapis_numeru.append(i)
                     print("Zły zapis numeru punktu: ", i)
             else:
                 name = podziel(part)
@@ -101,25 +102,31 @@ def sprawdz():
                         prawidlowe.append(i)
                     elif name[0] == 'E':
                         bledne.append("{0}  -  Nieprawidłowe oznaczenie OFU, użytek ekologiczny nie jest aktualny.".format(i))
+                        oznaczenie_ofu.append(i)
                         print("Użytek ekologiczny nie jest aktualny: ", i)
                     elif name[0] in OFU1:
                         bledne.append("{0}  -  Dana wartość OFU musi być powiązana z OZU i OZK.".format(i))
+                        dana_ofu.append(i)
                         print("Dana wartość OFU musi być powiązana z OZK: ", i)
                     else:
                         bledne.append("{0}  -  Złe przyjęcie wartości OZK.".format(i))
+                        przyjecie_wartosci_ofu.append(i)
                         print("Zła przyjęcie wartości OZK: ", i)
                 elif len(name) == 2:
                     if name[0] in OFU1 and warunek2(name[0],name[1]) == True:
                         prawidlowe.append(i)
                     elif name[0] in OFU:
                         bledne.append("{0}  -  Podany grunt ({1}) nie podlega gleboznawczej klasyfikacji gruntów.".format(i,name[0]))
+                        grunt_nie_podlega.append(i)
                         print("Podany grunt nie podlega gleboznawczej klasyfikacji gruntów: ", i)
                     elif name[0] == 'E':
                         bledne.append("{0}  -  Nieprawidłowe oznaczenie OFU, użytek ekologiczny nie jest aktualny.".format(i))
+                        uzytek_ekologiczny.append(i)
                         print("Użytek ekologiczny nie jest aktualny: ", i)
                 elif len(name) == 3:
                     if name[0] == 'E':
                         bledne.append("{0}  -  Nieprawidłowe oznaczenie OFU, użytek ekologiczny nie jest aktualny.".format(i))
+                        uzytek_ekologiczny.append(i)
                         print("Użytek ekologiczny nie jest aktualny ", i)
 
 sprawdz()
