@@ -84,7 +84,7 @@ def warunek2(name1, name2) -> bool:
     return False
 
 
-dzialki = []
+dzialki: list[str] = []
 prawidlowe = []
 
 for line in data:
@@ -101,8 +101,20 @@ przyjecie_wartosci_ofu = []
 grunt_nie_podlega = []
 uzytek_ekologiczny = []
 
+def bad_charnumber(i: str) -> bool:
+    for char in i:
+        if char != r'/' and char != '-' and not char.isnumeric() and not char.isalpha():
+            print(f"Zły znak w numerze: {i}: {repr(char)}")
+            return True
+    return False
 
 for i in dzialki:
+
+    if bad_charnumber(i):
+        zapis_numeru.append(i)
+        # print("Zły zapis numeru punktu: ", i)
+
+    
     if i.count("/") != 1:
         ukosniki.append(i)
         # print("Zła ilość ukośników w nazwie: ",i)
