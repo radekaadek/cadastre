@@ -104,7 +104,10 @@ uzytek_ekologiczny = []
 def bad_charnumber(i: str) -> bool:
     for char in i:
         if char != r'/' and char != '-' and not char.isnumeric() and not char.isalpha():
-            print(f"Zły znak w numerze: {i}: {repr(char)}")
+            # print(f"Zły znak w numerze: {i}: {repr(char)}")
+            return True
+        if not char.isascii():
+            # print(f"Znak nie jest ASCII: {i}: {repr(char)}")
             return True
     return False
 
@@ -186,13 +189,16 @@ print(f"Numery z nieprawidłowym oznaczeniem OFU gdzie użytek ekologiczny nie j
 for uz in uzytek_ekologiczny:
     print(uz)
 
-error_sum = (
-    len(ukosniki)
-    + len(myslniki)
-    + len(zapis_numeru)
-    + len(oznaczenie_ofu)
-    + len(przyjecie_wartosci_ofu)
-    + len(grunt_nie_podlega)
-    + len(uzytek_ekologiczny)
-)
-print(f"Liczba wszystkich blednych numerów: {error_sum}")
+
+all_errors = list(set([*ukosniki, *myslniki, *zapis_numeru, *oznaczenie_ofu, *przyjecie_wartosci_ofu, *grunt_nie_podlega, *uzytek_ekologiczny, *dana_ofu]))
+
+print(f"Liczba wszystkich blednych numerów: {len(all_errors)}")
+
+# write all to a file
+with open("ok.txt", "w") as file:
+    for i in all_errors:
+        file.write(i)
+        file.write("\n")
+
+print("Zapisano wszystkie bledny numery do pliku ok.txt")
+
