@@ -100,12 +100,13 @@ dana_ofu = []
 przyjecie_wartosci_ofu = []
 grunt_nie_podlega = []
 uzytek_ekologiczny = []
+wartosc_s = []
+# S-R Ł Ls może
 
 def bad_charnumber(i: str) -> bool:
     for char in i:
         if char != r'/' and char != '-' and not char.isnumeric() and not char.isalpha():
             # print(f"Zły znak w numerze: {i}: {repr(char)}")
-            print(repr(char))
             return True
         if not char.isascii():
             # print(f"Znak nie jest ASCII: {i}: {repr(char)}")
@@ -116,7 +117,7 @@ for i in dzialki:
 
     if bad_charnumber(i):
         zapis_numeru.append(i)
-        break
+        continue
         # print("Zły zapis numeru punktu: ", i)
 
     
@@ -158,6 +159,9 @@ for i in dzialki:
                 elif name[0] == "E":
                     uzytek_ekologiczny.append(i)
                     # print("Użytek ekologiczny nie jest aktualny: ", i)
+                elif name[0] == "S" and name[1] not in {"R", "Ł", "Ps"}:
+                    wartosc_s.append(i)
+
             elif len(name) == 3:
                 if name[0] == "E":
                     uzytek_ekologiczny.append(i)
@@ -191,8 +195,12 @@ print(f"Numery z nieprawidłowym oznaczeniem OFU gdzie użytek ekologiczny nie j
 for uz in uzytek_ekologiczny:
     print(uz)
 
+print(f"Numery gdzie po S nie jest R, Ł, Ls: {len(wartosc_s)}")
+for wart in wartosc_s:
+    print(wart)
 
-all_errors = set([*ukosniki, *myslniki, *zapis_numeru, *oznaczenie_ofu, *przyjecie_wartosci_ofu, *grunt_nie_podlega, *uzytek_ekologiczny, *dana_ofu])
+
+all_errors = list(set([*ukosniki, *myslniki, *zapis_numeru, *oznaczenie_ofu, *przyjecie_wartosci_ofu, *grunt_nie_podlega, *uzytek_ekologiczny, *dana_ofu, *wartosc_s]))
 
 print(f"Liczba wszystkich blednych numerów: {len(all_errors)}")
 
