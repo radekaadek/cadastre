@@ -200,7 +200,7 @@ for wart in wartosc_s:
     print(wart)
 
 
-all_errors = list(set([*ukosniki, *myslniki, *zapis_numeru, *oznaczenie_ofu, *przyjecie_wartosci_ofu, *grunt_nie_podlega, *uzytek_ekologiczny, *dana_ofu, *wartosc_s]))
+all_errors = set([*ukosniki, *myslniki, *zapis_numeru, *oznaczenie_ofu, *przyjecie_wartosci_ofu, *grunt_nie_podlega, *uzytek_ekologiczny, *dana_ofu, *wartosc_s])
 
 print(f"Liczba wszystkich blednych numerów: {len(all_errors)}")
 
