@@ -22,7 +22,7 @@ OZU = ["Ł", "Ps", "Ls", "Lz", "R"]
 OZK = ["I", "II", "III", "IV", "V", "VI"]
 OZK1 = ["I", "II", "IIIa", "IIIb", "IVa", "IVb", "V", "VI", "VIz"]
 
-file_path = "drive-download-20241014T084645Z-001/Kontury_eksport_dz.txt"
+file_path = "course_materials/Kontury_eksport_dz.txt"
 with open(file_path, encoding="ISO-8859-1", newline="\r\n") as file:
     data = file.readlines()
 
