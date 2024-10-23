@@ -115,6 +115,7 @@ for i in dzialki:
 
     if bad_charnumber(i):
         zapis_numeru.append(i)
+        break
         # print("Zły zapis numeru punktu: ", i)
 
     
