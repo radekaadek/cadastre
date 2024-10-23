@@ -105,6 +105,7 @@ def bad_charnumber(i: str) -> bool:
     for char in i:
         if char != r'/' and char != '-' and not char.isnumeric() and not char.isalpha():
             # print(f"Zły znak w numerze: {i}: {repr(char)}")
+            print(repr(char))
             return True
         if not char.isascii():
             # print(f"Znak nie jest ASCII: {i}: {repr(char)}")
@@ -191,7 +192,7 @@ for uz in uzytek_ekologiczny:
     print(uz)
 
 
-all_errors = list(set([*ukosniki, *myslniki, *zapis_numeru, *oznaczenie_ofu, *przyjecie_wartosci_ofu, *grunt_nie_podlega, *uzytek_ekologiczny, *dana_ofu]))
+all_errors = set([*ukosniki, *myslniki, *zapis_numeru, *oznaczenie_ofu, *przyjecie_wartosci_ofu, *grunt_nie_podlega, *uzytek_ekologiczny, *dana_ofu])
 
 print(f"Liczba wszystkich blednych numerów: {len(all_errors)}")
 
