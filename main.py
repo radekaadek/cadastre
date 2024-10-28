@@ -115,10 +115,10 @@ def bad_charnumber(i: str) -> bool:
 
 for i in dzialki:
 
-    # if bad_charnumber(i):
-    #     zapis_numeru.append(i)
-    #     continue
-    #     # print("Zły zapis numeru punktu: ", i)
+    if bad_charnumber(i):
+        zapis_numeru.append(i)
+        continue
+        # print("Zły zapis numeru punktu: ", i)
 
     
     if i.count("/") != 1:
