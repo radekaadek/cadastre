@@ -22,8 +22,8 @@ OZU = ["Ł", "Ps", "Ls", "Lz", "R"]
 OZK = ["I", "II", "III", "IV", "V", "VI"]
 OZK1 = ["I", "II", "IIIa", "IIIb", "IVa", "IVb", "V", "VI", "VIz"]
 
-file_path = "course_materials/Kontury_eksport_dz.txt"
-with open(file_path, encoding="ISO-8859-1", newline="\r\n") as file:
+file_path = "kontrolny_plik.txt"
+with open(file_path, encoding="ISO-8859-2", newline="\r\n") as file:
     data = file.readlines()
 
 
@@ -105,7 +105,7 @@ wartosc_s = []
 
 def bad_charnumber(i: str) -> bool:
     for char in i:
-        if char != r'/' and char != '-' and not char.isnumeric() and not char.isalpha():
+        if char.isspace():
             # print(f"Zły znak w numerze: {i}: {repr(char)}")
             return True
         if not char.isascii():
@@ -115,10 +115,10 @@ def bad_charnumber(i: str) -> bool:
 
 for i in dzialki:
 
-    if bad_charnumber(i):
-        zapis_numeru.append(i)
-        continue
-        # print("Zły zapis numeru punktu: ", i)
+    # if bad_charnumber(i):
+    #     zapis_numeru.append(i)
+    #     continue
+    #     # print("Zły zapis numeru punktu: ", i)
 
     
     if i.count("/") != 1:
