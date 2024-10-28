@@ -133,7 +133,7 @@ for i in dzialki:
             # print(name)
             if len(name) == 1:
                 if name[0] in OFU or warunek1(name[0]):
-                    prawidlowe.append(i)
+                    continue
                 elif name[0] == "E":
                     oznaczenie_ofu.append(i)
                     # print("Użytek ekologiczny nie jest aktualny: ", i)
@@ -145,8 +145,8 @@ for i in dzialki:
                     # print("Zła przyjęcie wartości OZK: ", i)
             elif len(name) == 2:
                 if name[0] in OFU1 and warunek2(name[0], name[1]):
-                    prawidlowe.append(i)
-                elif name[0] in OFU:
+                    continue
+                if name[0] in OFU:
                     grunt_nie_podlega.append(i)
                     # print("Podany grunt nie podlega gleboznawczej klasyfikacji gruntów: ", i)
                 elif name[0] == "E":
@@ -192,6 +192,8 @@ for wart in wartosc_s:
 all_errors = {*ukosniki, *myslniki, *zapis_numeru, *oznaczenie_ofu, *przyjecie_wartosci_ofu, *grunt_nie_podlega, *uzytek_ekologiczny, *dana_ofu, *wartosc_s}
 
 print(f"Liczba wszystkich blednych numerów: {len(all_errors)}")
+
+print(f"{len(dzialki) - len(all_errors)}")
 
 # write all to a file
 with open("ok.txt", "w") as file:
