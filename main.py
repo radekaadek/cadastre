@@ -211,4 +211,3 @@ with open("ok.txt", "w") as file:
         file.write("\n")
 
 print("Zapisano wszystkie bledny numery do pliku ok.txt")
-
