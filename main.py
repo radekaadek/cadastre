@@ -22,20 +22,13 @@ OZU = ["Ł", "Ps", "Ls", "Lz", "R"]
 OZK = ["I", "II", "III", "IV", "V", "VI"]
 OZK1 = ["I", "II", "IIIa", "IIIb", "IVa", "IVb", "V", "VI", "VIz"]
 
-file_path = "kontrolny_plik.txt"
+file_path = "course_materials/Kontury_eksport_dz.txt"
 with open(file_path, encoding="ISO-8859-2", newline="\r\n") as file:
     data = file.readlines()
 
 
-def podziel(name) -> list:
-    p = []
-    if "-" not in name:
-        p.append(name)
-    else:
-        parts = name.split("-")
-        for part in parts:
-            p.append(part)
-    return p
+def podziel(name: str) -> list:
+    return name.split("-") if "-" in name else [name]
 
 
 def pomin(input_string, letters_to_skip):
@@ -137,6 +130,9 @@ for i in dzialki:
                 # print("Zły zapis numeru punktu: ", i)
         else:
             name = podziel(part)
+            if len(name) > 2:
+                # print(name)
+                zapis_numeru.append(i)
             # print(name)
             if len(name) == 1:
                 if name[0] in OFU or warunek1(name[0]):
@@ -162,10 +158,6 @@ for i in dzialki:
                 elif name[0] == "S" and name[1] not in {"R", "Ł", "Ps"}:
                     wartosc_s.append(i)
 
-            elif len(name) == 3:
-                if name[0] == "E":
-                    uzytek_ekologiczny.append(i)
-                    # print("Użytek ekologiczny nie jest aktualny ", i)
 
 print(f"Numery z nieprawidłową ilością ukośników: {len(ukosniki)}")
 for uk in ukosniki:
