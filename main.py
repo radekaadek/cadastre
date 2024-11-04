@@ -85,6 +85,8 @@ for line in data:
     if 3 < len(newLine) < 20:
         dzialki.append(newLine)
 
+nums = set()
+powtorzone = []
 ukosniki = []
 myslniki = []
 zapis_numeru = []
@@ -102,7 +104,11 @@ def bad_charnumber(i: str) -> bool:
             # print(f"Zły znak w numerze: {i}: {repr(char)}")
             return True
     return False
-print(len(dzialki))
+
+def powtorzone_numbers(nums: list[str]) -> list[str]:
+    return [num for num in nums if nums.count(num) > 1]
+
+
 for i in dzialki:
 
     if bad_charnumber(i):
@@ -126,6 +132,9 @@ for i in dzialki:
                 zapis_numeru.append(i)
                 # print("Zły zapis numeru punktu: ", i)
         else:
+            if part0 in nums:
+                powtorzone.append(i)
+            nums.add(part0)
             name = podziel(part)
             if len(name) > 2:
                 # print(name)
@@ -155,7 +164,7 @@ for i in dzialki:
                 elif name[0] == "S" and name[1] not in {"R", "Ł", "Ps"}:
                     wartosc_s.append(i)
 
-
+print(len(prawidlowe))
 print(f"Numery z nieprawidłową ilością ukośników: {len(ukosniki)}")
 for uk in ukosniki:
     print(uk)
@@ -188,10 +197,14 @@ print(f"Numery gdzie po S nie jest R, Ł, Ls: {len(wartosc_s)}")
 for wart in wartosc_s:
     print(wart)
 
+print(f"Powtarzające się numery: {len(powtorzone)}")
+for rep in powtorzone:
+    print(rep)
+
 
 all_errors = {*ukosniki, *myslniki, *zapis_numeru, *oznaczenie_ofu, *przyjecie_wartosci_ofu, *grunt_nie_podlega, *uzytek_ekologiczny, *dana_ofu, *wartosc_s}
 
-print(f"Liczba wszystkich blednych numerów: {len(all_errors)}")
+print(f"Liczba wszystkich blednych numerów: {len(all_errors) + len(powtorzone)}")
 
 print(f"{len(dzialki) - len(all_errors)}")
 
