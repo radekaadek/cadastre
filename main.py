@@ -1,3 +1,6 @@
+import tkinter as tk
+import io
+
 OFU = [
     "B",
     "Ba",
@@ -78,7 +81,6 @@ def warunek2(name1, name2) -> bool:
 
 
 dzialki: list[str] = []
-prawidlowe = []
 
 for line in data:
     newLine = line.strip()
@@ -86,7 +88,7 @@ for line in data:
         dzialki.append(newLine)
 
 nums = set()
-powtorzone = []
+powtorzone: list[str] = []
 ukosniki = []
 myslniki = []
 zapis_numeru = []
@@ -123,7 +125,6 @@ for i in dzialki:
     elif " " in i:
         myslniki.append(i)
         # print("Brak myślnika, odstęp między znakami: ", i)
-        pass
     else:
         part0 = i.split("/")[0]
         part = i.split("/")[1]
@@ -139,18 +140,22 @@ for i in dzialki:
             if len(name) > 2:
                 # print(name)
                 zapis_numeru.append(i)
+                continue
             # print(name)
             if len(name) == 1:
                 if name[0] in OFU or warunek1(name[0]):
                     continue
                 elif name[0] == "E":
                     oznaczenie_ofu.append(i)
+                    continue
                     # print("Użytek ekologiczny nie jest aktualny: ", i)
                 elif name[0] in OFU1:
                     dana_ofu.append(i)
+                    continue
                     # print("Dana wartość OFU musi być powiązana z OZK: ", i)
                 else:
                     przyjecie_wartosci_ofu.append(i)
+                    continue
                     # print("Zła przyjęcie wartości OZK: ", i)
             elif len(name) == 2:
                 if name[0] in OFU1 and warunek2(name[0], name[1]):
@@ -164,54 +169,80 @@ for i in dzialki:
                 elif name[0] == "S" and name[1] not in {"R", "Ł", "Ps"}:
                     wartosc_s.append(i)
 
-print(len(prawidlowe))
-print(f"Numery z nieprawidłową ilością ukośników: {len(ukosniki)}")
-for uk in ukosniki:
-    print(uk)
+stream = io.StringIO()
+if len(ukosniki) > 0:
+    stream.write(f"Numery z nieprawidłową ilością ukośników: {len(ukosniki)}\n")
+    for uk in ukosniki:
+        stream.write(f"{uk}\n")
 
-print(f"Numery bez myślnika: {len(myslniki)}")
-for mys in myslniki:
-    print(mys)
+if len(myslniki) > 0:
+    stream.write(f"Numery bez myślnika: {len(myslniki)}\n")
+    for mys in myslniki:
+        stream.write(f"{mys}\n")
 
-print(f"Numery ze złym zapisem numeru: {len(zapis_numeru)}")
-for nr in zapis_numeru:
-    print(nr)
+if len(zapis_numeru) > 0:
+    stream.write(f"Numery ze złym zapisem numeru: {len(zapis_numeru)}\n")
+    for nr in zapis_numeru:
+        stream.write(f"{nr}\n")
 
-print(f"Numery z nieprawidłowym oznaczeniem OFU gdzie użytek ekologiczny nie jest aktualny: {len(oznaczenie_ofu)}")
-for oz in oznaczenie_ofu:
-    print(oz)
+if len(oznaczenie_ofu) > 0:
+    stream.write(f"Numery z nieprawidłowym oznaczeniem OFU gdzie użytek ekologiczny nie jest aktualny: {len(oznaczenie_ofu)}\n")
+    for oz in oznaczenie_ofu:
+        stream.write(f"{oz}\n")
 
-print(f"Numery z wartośćą OFU która nie jest powiązana z OZU i OZK: {len(przyjecie_wartosci_ofu)}")
-for do in dana_ofu:
-    print(do)
+if len(przyjecie_wartosci_ofu) > 0:
+    stream.write(f"Numery z wartośćą OFU która nie jest powiązana z OZU i OZK: {len(przyjecie_wartosci_ofu)}\n")
+    for do in przyjecie_wartosci_ofu:
+        stream.write(f"{do}\n")
 
-print(f"Numery z gruntem który nie podlega gleboznawczej klasyfikacji gruntów: {len(grunt_nie_podlega)}")
-for gr in grunt_nie_podlega:
-    print(gr)
+if len(grunt_nie_podlega) > 0:
+    stream.write(f"Numery z gruntem który nie podlega gleboznawczej klasyfikacji gruntów: {len(grunt_nie_podlega)}\n")
+    for gr in grunt_nie_podlega:
+        stream.write(f"{gr}\n")
 
-print(f"Numery z nieprawidłowym oznaczeniem OFU gdzie użytek ekologiczny nie jest aktualny: {len(uzytek_ekologiczny)}")
-for uz in uzytek_ekologiczny:
-    print(uz)
+if len(uzytek_ekologiczny) > 0:
+    stream.write(f"Numery z nieprawidłowym oznaczeniem OFU gdzie użytek ekologiczny nie jest aktualny: {len(uzytek_ekologiczny)}\n")
+    for uz in uzytek_ekologiczny:
+        stream.write(f"{uz}\n")
 
-print(f"Numery gdzie po S nie jest R, Ł, Ls: {len(wartosc_s)}")
-for wart in wartosc_s:
-    print(wart)
+if len(dana_ofu) > 0:
+    stream.write(f"Numery z nieprawidłową daną OFU: {len(dana_ofu)}\n")
+    for do in dana_ofu:
+        stream.write(f"{do}\n")
 
-print(f"Powtarzające się numery: {len(powtorzone)}")
-for rep in powtorzone:
-    print(rep)
+if len(wartosc_s) > 0:
+    stream.write(f"Numery gdzie po S nie jest R, Ł, Ls: {len(wartosc_s)}\n")
+    for wart in wartosc_s:
+        stream.write(f"{wart}\n")
+
+if len(powtorzone) > 0:
+    stream.write(f"Powtarzające się numery: {len(powtorzone)}\n")
+    for rep in powtorzone:
+        stream.write(f"{rep}\n")
 
 
 all_errors = {*ukosniki, *myslniki, *zapis_numeru, *oznaczenie_ofu, *przyjecie_wartosci_ofu, *grunt_nie_podlega, *uzytek_ekologiczny, *dana_ofu, *wartosc_s}
 
-print(f"Liczba wszystkich blednych numerów: {len(all_errors) + len(powtorzone)}")
+stream.write(f"Liczba wszystkich blednych numerów: {len(all_errors) + len(powtorzone)}\n")
 
-print(f"{len(dzialki) - len(all_errors)}")
+stream.write(f"{len(dzialki) - len(all_errors)}\n")
+
+print(stream.getvalue())
 
 # write all to a file
-with open("ok.txt", "w") as file:
+file_name = "ok.txt"
+with open(file_name, "w") as file:
     for i in all_errors:
         file.write(i)
         file.write("\n")
 
-print("Zapisano wszystkie bledny numery do pliku ok.txt")
+print(f"Zapisano wszystkie bledne numery do pliku {file_name}")
+
+window = tk.Tk()
+window.title("Błędy")
+window.geometry("500x500")
+
+tk.Label(window, text=stream.getvalue()).pack()
+
+window.mainloop()
+
