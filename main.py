@@ -225,7 +225,7 @@ all_errors = {*ukosniki, *myslniki, *zapis_numeru, *oznaczenie_ofu, *przyjecie_w
 
 stream.write(f"Liczba wszystkich blednych numerów: {len(all_errors) + len(powtorzone)}\n")
 
-stream.write(f"{len(dzialki) - len(all_errors)}\n")
+# stream.write(f"{len(dzialki) - len(all_errors)}\n")
 
 print(stream.getvalue())
 
