@@ -134,7 +134,7 @@ for i in dzialki:
                 # print("Zły zapis numeru punktu: ", i)
         else:
             if part0 in nums:
-                powtorzone.append(i)
+                powtorzone.append(part0)
             nums.add(part0)
             name = podziel(part)
             if len(name) > 2:
@@ -216,8 +216,8 @@ if len(wartosc_s) > 0:
         stream.write(f"{wart}\n")
 
 if len(powtorzone) > 0:
-    stream.write(f"Powtarzające się numery: {len(powtorzone)}\n")
-    for rep in powtorzone:
+    stream.write(f"Powtarzające się numery: {len(set(powtorzone))}\n")
+    for rep in set(powtorzone):
         stream.write(f"{rep}\n")
 
 
