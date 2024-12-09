@@ -25,7 +25,7 @@ OZU = ["Ł", "Ps", "Ls", "Lz", "R"]
 OZK = ["I", "II", "III", "IV", "V", "VI"]
 OZK1 = ["I", "II", "IIIa", "IIIb", "IVa", "IVb", "V", "VI", "VIz"]
 
-file_path = "course_materials/kontrolny_plik.txt"
+file_path = "kontrolny_plik.txt"
 with open(file_path, encoding="ISO-8859-2", newline="\r\n") as file:
     data = file.readlines()
 
