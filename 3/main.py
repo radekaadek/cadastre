@@ -24,6 +24,10 @@ for idx, layer in gpd.list_layers("Zbiór danych GML ZSK 2025.gml").iterrows():
         datas.append(data)
         data_reproj = data.to_crs(epsg=4326)
         # data_reproj = data_reproj.to_file(f"{data_dir}/{name}.geojson", driver="GeoJSON")
+    else:
+        # save to csv
+        print(data.info())
+        data.to_csv(f"{data_dir}/{name}.csv", index=False)
 
 # function to create a popup with feature's attributes
 def create_popup(feature):
@@ -32,8 +36,6 @@ def create_popup(feature):
 
 # visualize using folium
 m = folium.Map(location=[52.26520441814408, 20.55219304492736], zoom_start=13)
-# add all layers to map
-
 
 for data in datas:
     fields = [key for key in data.columns if key != 'geometry']
