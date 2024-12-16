@@ -3,7 +3,6 @@ import folium
 import os
 import random
 
-datas = []
 
 data_dir = "data"
 if not os.path.exists(data_dir):
@@ -13,21 +12,27 @@ if not os.path.exists(data_dir):
 def random_color():
     return "#{:06x}".format(random.randint(0, 0xFFFFFF))
 
+# add EGB_ to the list
+name_to_pos = {'Budynek': 3, 'DzialkaEwidencyjna': 2, 'KonturKlasyfikacyjny': 1, 'KonturUzytkuGruntowego': 0}
+# add EGB_ to every key
+name_to_pos = {f"EGB_{key}": value for key, value in name_to_pos.items()}
+datas = [None] * len(name_to_pos)
+
+
 for idx, layer in gpd.list_layers("Zbiór danych GML ZSK 2025.gml").iterrows():
     name = layer['name']
     data = gpd.read_file("Zbiór danych GML ZSK 2025.gml", layer=name)
     # change to geopandas dataframe
     if 'geometry' in data.columns:
-        # add name as a column
-        data['layer'] = name
-        data['color'] = random_color()
-        datas.append(data)
-        data_reproj = data.to_crs(epsg=4326)
-        # data_reproj = data_reproj.to_file(f"{data_dir}/{name}.geojson", driver="GeoJSON")
+        if name in name_to_pos:
+            # add name as a column
+            data['layer'] = name
+            data['color'] = random_color()
+            datas[name_to_pos[name]] = data
+            data_reproj = data.to_crs(epsg=4326)
     else:
-        # save to csv
-        print(data.info())
         data.to_csv(f"{data_dir}/{name}.csv", index=False)
+
 
 # function to create a popup with feature's attributes
 def create_popup(feature):
