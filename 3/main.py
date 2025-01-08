@@ -44,10 +44,18 @@ m = folium.Map(location=[52.26520441814408, 20.55219304492736], zoom_start=13)
 
 for data in datas:
     fields = [key for key in data.columns if key != 'geometry']
-    child = m.add_child(folium.GeoJson(
+    #get current layer name
+    layer_name = data.iloc[0].layer
+    geojson_layer = folium.GeoJson(
         data,
         style_function=lambda x: {'color': x['properties']['color']},
-        popup=folium.GeoJsonPopup(fields=fields)
-    ))
+        popup=folium.GeoJsonPopup(fields=fields),
+        name=layer_name
+    )
+    #add each geojson to layer control
+    fg = folium.FeatureGroup(name=layer_name, overlay=True, control=True, show=True).add_to(m)
+    geojson_layer.add_to(fg)
+    
+folium.LayerControl().add_to(m)
 
 m.save("map.html")
