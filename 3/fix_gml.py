@@ -31,7 +31,6 @@ for i in range(len(lines)):
     if '<egb:EGB_Podmiot gml:id' in lines[i]:
         id = lines[i].split('"')[1]
         lines[i] = f'<egb:EGB_Podmiot>{id}</egb:EGB_Podmiot>\n'
-        lines[i+1] = ''
 
 # change all <egb:podstawaUtworzeniaWersjiObiektu xlink:href="PL.PZGiK.179.EGiB_aadb7f8f-066b-44e6-ae19-0994cbea4448_2007-06-04T11-36-35" xlink:type="simple"/>
 # to
@@ -47,10 +46,17 @@ for i in range(len(lines)):
 # change all <egb:adresOsobyFizycznej xlink:href="PL.PZGiK.179.EGiB_8e0cc5e9-d059-459a-93c7-48f957a8d09d_2022-10-13T12-17-41" xlink:type="simple"/>
 # to <egb:adresOsobyFizycznej>PL.PZGiK.179.EGiB_8e0cc5e9-d059-459a-93c7-48f957a8d09d_2022-10-13T12-17-41</egb:adresOsobyFizycznej>
 for i in range(len(lines)):
-    # print(f"ending: {lines[i][-3:-1]}")
     if r'<egb:adresOsobyFizycznej xlink:href="' in lines[i] and lines[i][-3:-1] == '/>':
         id = lines[i].split('"')[1]
         lines[i] = f"<egb:adresOsobyFizycznej>{id}</egb:adresOsobyFizycznej>\n"
+
+# change all <egb:osobaFizyczna xlink:href="PL.PZGiK.179.EGiB_fd812b09-b957-46e8-a3c1-fbedec2bfb7d_2024-04-26T15-52-50" xlink:type="simple"/>
+# to <egb:osobaFizyczna>PL.PZGiK.179.EGiB_fd812b09-b957-46e8-a3c1-fbedec2bfb7d_2024-04-26T15-52-50</egb:osobaFizyczna>
+for i in range(len(lines)):
+    if r'<egb:osobaFizyczna xlink:href="' in lines[i] and lines[i][-3:-1] == '/>':
+        id = lines[i].split('"')[1]
+        lines[i] = f"<egb:osobaFizyczna>{id}</egb:osobaFizyczna>\n"
+
 
 #### adresZameldowania jest ok
 
