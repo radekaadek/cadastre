@@ -19,9 +19,9 @@ name_to_pos = {f"EGB_{key}": value for key, value in name_to_pos.items()}
 datas = [None] * len(name_to_pos)
 
 
-for idx, layer in gpd.list_layers("Zbiór danych GML ZSK 2025.gml").iterrows():
+for idx, layer in gpd.list_layers("Fixed.gml").iterrows():
     name = layer['name']
-    data = gpd.read_file("Zbiór danych GML ZSK 2025.gml", layer=name)
+    data = gpd.read_file("Fixed.gml", layer=name)
     # change to geopandas dataframe
     if 'geometry' in data.columns:
         if name in name_to_pos:
