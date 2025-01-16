@@ -25,6 +25,13 @@ for i in range(len(lines)):
     if '</egb:EGB_Podmiot>' in lines[i]:
         lines[i] = ''
 
+#### UDZIAL WE WLADANIU
+# delete all lines with <egb:podmiotUdzialuWeWladaniu> and </egb:podmiotUdzialuWeWladaniu>
+for i in range(len(lines)):
+    if '<egb:podmiotUdzialuWeWladaniu>' in lines[i] or '</egb:podmiotUdzialuWeWladaniu>' in lines[i]:
+        lines[i] = ''
+
+
 
 def replace_xlink_href(lines, tag):
     # Replace xlink:href with <tag>id</tag>
@@ -53,7 +60,8 @@ tags_to_replace = [
     "egb:lokalizacjaJRG",
     "egb:adresInstytucji",
     "egb:malzenstwo",
-    "egb:budynekZBlokiemBud"
+    "egb:budynekZBlokiemBud",
+    "egb:instytucja1",
 ]
 
 for tag in tags_to_replace:
