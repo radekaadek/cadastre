@@ -47,7 +47,13 @@ tags_to_replace = [
     "egb:lokalizacjaObrebu",
     "egb:adresBudynku",
     "egb:budynekZElementamiZwiazanymi",
-    "egb:osobaFizyczna2"
+    "egb:osobaFizyczna2",
+    "egb:osobaFizyczna3",
+    "egb:operatTechniczny1",
+    "egb:lokalizacjaJRG",
+    "egb:adresInstytucji",
+    "egb:malzenstwo",
+    "egb:budynekZBlokiemBud"
 ]
 
 for tag in tags_to_replace:
