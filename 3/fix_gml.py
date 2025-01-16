@@ -67,6 +67,15 @@ tags_to_replace = [
 for tag in tags_to_replace:
     lines = replace_xlink_href(lines, tag)
 
+# delete all </egb:EGB_JednostkaRejestrowa>
+# and change <egb:EGB_JednostkaRejestrowa gml:id="jr.47689e35-46f3-49c3-8b4a-03c4062ecf92">
+# to <egb:EGB_JednostkaRejestrowa>jr.47689e35-46f3-49c3-8b4a-03c4062ecf92</egb:EGB_JednostkaRejestrowa>
+for i in range(len(lines)):
+    if '</egb:EGB_JednostkaRejestrowa>' in lines[i]:
+        lines[i] = ''
+    if '<egb:EGB_JednostkaRejestrowa gml:id="' in lines[i]:
+        id = lines[i].split('"')[1]
+        lines[i] = f'<egb:EGB_JednostkaRejestrowa>{id}</egb:EGB_JednostkaRejestrowa>\n'
 
 # write to Fixed.gml
 with open(output_file, 'w') as f:
