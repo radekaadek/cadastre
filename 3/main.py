@@ -18,10 +18,13 @@ name_to_pos = {'PunktGraniczny':4, 'Budynek': 3, 'DzialkaEwidencyjna': 2, 'Kontu
 name_to_pos = {f"EGB_{key}": value for key, value in name_to_pos.items()}
 datas = [None] * len(name_to_pos)
 
+useless_attributes = {'gml_id', 'lokalnyId', 'przestrzenNazw', 'wersjaId', 'startObiekt', 'startWersjaObiekt', 'podstawaUtworzeniaWersjiObiektu'}
 
 for idx, layer in gpd.list_layers("Fixed.gml").iterrows():
     name = layer['name']
     data = gpd.read_file("Fixed.gml", layer=name)
+    usless_columns = [key for key in data.columns if key in useless_attributes]
+    data.drop(usless_columns, axis=1, inplace=True)
     # change to geopandas dataframe
     if 'geometry' in data.columns:
         if name in name_to_pos:
