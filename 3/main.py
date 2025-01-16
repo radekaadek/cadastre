@@ -46,19 +46,6 @@ for idx, layer in gpd.list_layers("Fixed.gml").iterrows():
         non_geometry_datas[name] = data
         data.to_csv(f"{data_dir}/{name}.csv", index=False)
 
-datas[name_to_pos['EGB_DzialkaEwidencyjna']]['JRG'] = datas[name_to_pos['EGB_DzialkaEwidencyjna']]['JRG'].astype(str)
-non_geometry_datas['EGB_UdzialWeWlasnosci']['JRG'] = non_geometry_datas['EGB_UdzialWeWlasnosci']['JRG'].astype(str)
-datas[name_to_pos['EGB_DzialkaEwidencyjna']] = pd.merge(
-    datas[name_to_pos['EGB_DzialkaEwidencyjna']],
-    non_geometry_datas['EGB_UdzialWeWlasnosci'],
-    on='JRG',
-    how='left'
-)
-# filter out those without geometry
-datas[name_to_pos['EGB_DzialkaEwidencyjna']] = datas[name_to_pos['EGB_DzialkaEwidencyjna']].dropna(subset=['geometry'])
-# change to geopandas dataframe
-datas[name_to_pos['EGB_DzialkaEwidencyjna']] = gpd.GeoDataFrame(datas[name_to_pos['EGB_DzialkaEwidencyjna']], geometry='geometry')
-
 # visualize using folium
 m = folium.Map(location=[52.26520441814408, 20.55219304492736], zoom_start=13)
 
