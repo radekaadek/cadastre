@@ -25,43 +25,33 @@ for i in range(len(lines)):
     if '</egb:EGB_Podmiot>' in lines[i]:
         lines[i] = ''
 
-# def replace_xlink_href(lines, tag):
-#     # Replace xlink:href with <tag>id</tag>
-#     for i in range(len(lines)):
-#         if f'<{tag} xlink:href="' in lines[i] and lines[i][-3:-1] == '/>':
-#             id = lines[i].split('"')[1]
-#             lines[i] = f"<{tag}>{id}</{tag}>\n"
-#     return lines
-#
-# tags_to_replace = [
-#     "egb:podstawaUtworzeniaWersjiObiektu",
-#     "egb:adresOsobyFizycznej",
-#     "egb:osobaFizyczna",
-#     "egb:dzialkaZabudowana",
-#     "egb:JRG2",
-#     "egb:lokalizacjaKonturu",
-#     "egb:lokalizacjaUzytku",
-#     "egb:JRG",
-#     "egb:adresDzialki",
-#     "egb:lokalizacjaObrebu",
-#     "egb:adresBudynku",
-#     "egb:budynekZElementamiZwiazanymi",
-#     "egb:osobaFizyczna2"
-# ]
 
-def replace_xlink_href_generic(lines):
-    # check if ends with  xlink:type="simple"/>
+def replace_xlink_href(lines, tag):
+    # Replace xlink:href with <tag>id</tag>
     for i in range(len(lines)):
-        if "xlink:href=" in lines[i] and lines[i][-3:-1] == '/>':
-            tag = lines[i].split(' ')[0][1:]
+        if f'<{tag} xlink:href="' in lines[i] and lines[i][-3:-1] == '/>':
             id = lines[i].split('"')[1]
-            lines[i] = f'<{tag}>{id}</{tag}>\n'
+            lines[i] = f"<{tag}>{id}</{tag}>\n"
     return lines
 
+tags_to_replace = [
+    "egb:podstawaUtworzeniaWersjiObiektu",
+    "egb:adresOsobyFizycznej",
+    "egb:osobaFizyczna",
+    "egb:dzialkaZabudowana",
+    "egb:JRG2",
+    "egb:lokalizacjaKonturu",
+    "egb:lokalizacjaUzytku",
+    "egb:JRG",
+    "egb:adresDzialki",
+    "egb:lokalizacjaObrebu",
+    "egb:adresBudynku",
+    "egb:budynekZElementamiZwiazanymi",
+    "egb:osobaFizyczna2"
+]
 
-# for tag in tags_to_replace:
-#     lines = replace_xlink_href(lines, tag)
-replace_xlink_href_generic(lines)
+for tag in tags_to_replace:
+    lines = replace_xlink_href(lines, tag)
 
 
 # write to Fixed.gml
