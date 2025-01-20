@@ -54,24 +54,40 @@ for key, value in datas.items():
     datas_list[key] = value
 
 for data in datas_list:
-    fields = [key for key in data.columns if key != 'geometry']
-    # print(data['geometry'])
-    data['Wspolrzedne'] = ''
+    fields = [key for key in data.columns if key not in ['geometry', 'color', 'layer']]
+    
+    # Format 'Współrzędne' as a text field with a scrollbar
+    data['Współrzędne'] = ''
     for idx, row in data.iterrows():
-        data.loc[idx, 'Wspolrzedne'] = str(row['geometry'])[7:-1]
-    fields.append('Wspolrzedne')
-    #get current layer name
-    layer_name = data.iloc[0].layer
+        coords = str(row['geometry'])
+        layer_name = row['layer']
+        # Apply slicing based on layer name
+        if layer_name == 'EGB_Budynek':
+            formatted_coords = coords[16:-2]
+        elif layer_name in ['EGB_KonturKlasyfikacyjny', 'EGB_KonturUzytkuGruntowego', 'EGB_DzialkaEwidencyjna']:
+            formatted_coords = coords[10:-2]
+        elif layer_name in ['EGB_PunktGraniczny']:
+            formatted_coords = coords[7:-1]
+        else:
+            formatted_coords = coords  # Default formatting for other layers
+        # Format coordinates into a scrollable text field
+        data.loc[idx, 'Współrzędne'] = (
+            f"<textarea style='width: 100%; height: 100px; overflow: auto;' readonly>"
+            f"{formatted_coords}</textarea>"
+        )
+    
+    fields.append('Współrzędne')
+
+    # Get current layer name
     geojson_layer = folium.GeoJson(
         data,
         style_function=lambda x: {'color': x['properties']['color']},
-        popup=folium.GeoJsonPopup(fields=fields),
+        popup=folium.GeoJsonPopup(fields=fields, max_width="500px"),  # Set popup width
         name=layer_name
     )
-    #add each geojson to layer control
+    # Add each GeoJSON to layer control
     fg = folium.FeatureGroup(name=layer_name, overlay=True, control=True, show=True).add_to(m)
     geojson_layer.add_to(fg)
-    
-folium.LayerControl().add_to(m)
+
 
 m.save("map.html")
