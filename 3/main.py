@@ -4,7 +4,6 @@ import os
 import random
 import pandas as pd
 
-
 data_dir = "data"
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
@@ -46,8 +45,87 @@ for idx, layer in gpd.list_layers("Fixed.gml").iterrows():
         non_geometry_datas[name] = data
         data.to_csv(f"{data_dir}/{name}.csv", index=False)
 
+#joiny do dolaczenia wlascicieli dla dzialek
+dzialki = datas[2]
+person_data = non_geometry_datas['EGB_OsobaFizyczna']
+couple_data = non_geometry_datas['EGB_Malzenstwo']
+institution_data = non_geometry_datas['EGB_Instytucja']
+wlasnosc_data = non_geometry_datas['EGB_UdzialWeWlasnosci']
+
+dzialki_merged = dzialki.merge(wlasnosc_data, left_on='JRG', right_on='JRG', #polaczenie dzialek z jrg
+                               suffixes=('_dzialki', '_jrg'))
+
+dzialki_merged= dzialki_merged.merge(person_data[['pierwszeImie', #polaczenie dzialek z osobami fizycznymi
+                                                    'pierwszyCzlonNazwiska',
+                                                    'gml_id']], left_on='osobaFizyczna', 
+                                                    right_on='gml_id', how='left')
+
+#rename columns related to osobafizyczna
+dzialki_merged = dzialki_merged.rename(columns={
+    'pierwszeImie': 'osobafiz_imie',
+    'pierwszyCzlonNazwiska': 'osobafiz_nazwisko'
+    })
+
+malzenstwa = couple_data.merge(person_data[['pierwszeImie', #polaczenie malzenstwa z pierwsza osoba fizyczna
+                                        'pierwszyCzlonNazwiska',
+                                        'gml_id']], left_on='osobaFizyczna2',
+                                        right_on='gml_id', how='left', suffixes=('_malzenstwo', '_osoba1'))
+
+#rename columns in malzenstwa related to the first person
+malzenstwa = malzenstwa.rename(columns={
+    'pierwszeImie': 'osoba1_imie',
+    'pierwszyCzlonNazwiska': 'osoba1_nazwisko'
+    })
+
+malzenstwa = malzenstwa.merge(person_data[['pierwszeImie', #polaczenie malzenstwa z druga osoba fizyczna
+                                        'pierwszyCzlonNazwiska',
+                                        'gml_id']], left_on='osobaFizyczna3',
+                                        right_on='gml_id', how='left')
+
+#rename columns in malzenstwa related to one person
+malzenstwa = malzenstwa.rename(columns={
+    'pierwszeImie': 'osoba2_imie',
+    'pierwszyCzlonNazwiska': 'osoba2_nazwisko',
+    'gml_id': 'gml_id_osoba2'
+    })
+
+dzialki_merged = dzialki_merged.merge(malzenstwa[['osoba1_imie','osoba1_nazwisko',
+                                    'osoba2_imie','osoba2_nazwisko',
+                                    'gml_id_malzenstwo']],left_on='malzenstwo',
+                                        right_on='gml_id_malzenstwo', how='left')
+
+dzialki_merged = dzialki_merged.merge(institution_data[['nazwaPelna',
+                                                       'gml_id']], left_on='instytucja1',
+                                                       right_on='gml_id', how='left')
+#iterate all objects from DzialkaEwidencyjna
+for index, row in dzialki.iterrows():
+    current_gml_id = row.gml_id
+    #get all merged rows for one gml_id
+    merged_rows = dzialki_merged[dzialki_merged['gml_id_dzialki'] == current_gml_id]
+    ownership_attribute = ''
+    #iterate all merged rows for one DzialkaEwidencyjna
+    for _, merged_row in merged_rows.iterrows():
+        if pd.notna(merged_row.osobafiz_imie): #row has osoba fizyczna
+            ownership_attribute += (f"[Właściciel: {merged_row.osobafiz_imie} {merged_row.osobafiz_nazwisko}"
+                                    f" Udział: {merged_row.licznikUlamkaOkreslajacegoWartoscUdzialu}/"
+                                    f"{merged_row.mianownikUlamkaOkreslajacegoWartoscUdzialu}]")
+
+        if pd.notna(merged_row.gml_id_malzenstwo): #row has malzenstwo
+            ownership_attribute += (f"[Małżeństwo: {merged_row.osoba1_imie} {merged_row.osoba1_nazwisko} i "
+                                    f"{merged_row.osoba2_imie} {merged_row.osoba2_nazwisko} "
+                                    f"Udział: {merged_row.licznikUlamkaOkreslajacegoWartoscUdzialu}/"
+                                    f"{merged_row.mianownikUlamkaOkreslajacegoWartoscUdzialu}]")
+
+        if pd.notna(merged_row.nazwaPelna):#row has instytucja
+            ownership_attribute += (f"[Instytucja: {merged_row.nazwaPelna} "
+                                     f"Udział: {merged_row.licznikUlamkaOkreslajacegoWartoscUdzialu}/"
+                                     f"{merged_row.mianownikUlamkaOkreslajacegoWartoscUdzialu}]") 
+    
+    #add wlasciciele column to exsisting dzialki data
+    dzialki.at[index, 'wlasciciele'] = ownership_attribute
+
 # visualize using folium
-m = folium.Map(location=[52.26520441814408, 20.55219304492736], zoom_start=13)
+m = folium.Map(location=[52.26520441814408, 20.55219304492736], zoom_start=13, tiles=None)
 
 datas_list = [None] * len(datas)
 for key, value in datas.items():
@@ -85,9 +163,19 @@ for data in datas_list:
         popup=folium.GeoJsonPopup(fields=fields, max_width="500px"),  # Set popup width
         name=layer_name
     )
-    # Add each GeoJSON to layer control
+
     fg = folium.FeatureGroup(name=layer_name, overlay=True, control=True, show=True).add_to(m)
     geojson_layer.add_to(fg)
 
+#osm basemap
+folium.TileLayer("OpenStreetMap", show=True,control=True).add_to(m)
+#empty basemap
+folium.TileLayer(
+    tiles="",
+    attr="Blank",
+    name="Brak podkładu mapowego",
+    show=False
+).add_to(m)
 
+folium.LayerControl().add_to(m)
 m.save("map.html")
