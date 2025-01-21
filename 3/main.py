@@ -20,7 +20,7 @@ pos2name = {v: k for k, v in name_to_pos.items()}
 name_to_pos = {f"EGB_{key}": value for key, value in name_to_pos.items()}
 datas = {} # position: data
 
-useless_attributes = {'gml_id', 'lokalnyId', 'przestrzenNazw', 'wersjaId', 'startObiekt', 'startWersjaObiekt', 'podstawaUtworzeniaWersjiObiektu'}
+useless_attributes = {'lokalnyId', 'przestrzenNazw', 'wersjaId', 'startObiekt', 'startWersjaObiekt', 'podstawaUtworzeniaWersjiObiektu'}
 non_geometry_datas = {}
 
 for idx, layer in gpd.list_layers("Fixed.gml").iterrows():
@@ -54,7 +54,7 @@ for key, value in datas.items():
     datas_list[key] = value
 
 for data in datas_list:
-    fields = [key for key in data.columns if key not in ['geometry', 'color', 'layer']]
+    fields = [key for key in data.columns if key not in ['geometry', 'color', 'layer', 'gml_id']]
     
     # Format 'Współrzędne' as a text field with a scrollbar
     data['Współrzędne'] = ''
