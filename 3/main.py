@@ -131,6 +131,7 @@ datas_list = [None] * len(datas)
 for key, value in datas.items():
     datas_list[key] = value
 
+geojson_layers = dict()
 for data in datas_list:
     fields = [key for key in data.columns if key not in ['geometry', 'color', 'layer', 'gml_id']]
     
@@ -163,9 +164,19 @@ for data in datas_list:
         popup=folium.GeoJsonPopup(fields=fields, max_width="500px"),  # Set popup width
         name=layer_name
     )
+    #store layers in a dict
+    geojson_layers[layer_name] = geojson_layer
 
+layers_ordered = ["EGB_KonturUzytkuGruntowego", 
+                    "EGB_KonturKlasyfikacyjny",
+                        "EGB_DzialkaEwidencyjna",
+                        "EGB_Budynek",
+                        "EGB_PunktGraniczny" ]
+
+#add layers in the correct order to map
+for layer_name in layers_ordered:
     fg = folium.FeatureGroup(name=layer_name, overlay=True, control=True, show=True).add_to(m)
-    geojson_layer.add_to(fg)
+    geojson_layers[layer_name].add_to(fg)
 
 #osm basemap
 folium.TileLayer("OpenStreetMap", show=True,control=True).add_to(m)
