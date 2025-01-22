@@ -4,23 +4,44 @@ import os
 import random
 import pandas as pd
 
-
 data_dir = "data"
 if not os.path.exists(data_dir):
     os.makedirs(data_dir)
+def define_weight(name):
+    if name == "EGB_Budynek":
+        return 3
+    elif name == "EGB_DzialkaEwidencyjna":
+        return 1
+    elif name == "EGB_KonturKlasyfikacyjny":
+        return 1
+    elif name == "EGB_KonturUzytkuGruntowego":
+        return 1
+
+def define_color(name):
+    if name == "EGB_Budynek":
+        return "red"
+    elif name == "EGB_DzialkaEwidencyjna":
+        return "black"
+    elif name == "EGB_KonturKlasyfikacyjny":
+        return "blue"
+    elif name == "EGB_KonturUzytkuGruntowego":
+        return "yellow"
 
 # function to generate a random color
 def random_color():
     return "#{:06x}".format(random.randint(0, 0xFFFFFF))
 
+
 # add EGB_ to the list
-name_to_pos = {'PunktGraniczny':4, 'Budynek': 3, 'DzialkaEwidencyjna': 2, 'KonturKlasyfikacyjny': 1, 'KonturUzytkuGruntowego': 0}
+name_to_pos = {'PunktGraniczny': 4, 'Budynek': 3, 'DzialkaEwidencyjna': 2, 'KonturKlasyfikacyjny': 1,
+               'KonturUzytkuGruntowego': 0}
 pos2name = {v: k for k, v in name_to_pos.items()}
 # add EGB_ to every key
 name_to_pos = {f"EGB_{key}": value for key, value in name_to_pos.items()}
-datas = {} # position: data
+datas = {}  # position: data
 
-useless_attributes = {'gml_id', 'lokalnyId', 'przestrzenNazw', 'wersjaId', 'startObiekt', 'startWersjaObiekt', 'podstawaUtworzeniaWersjiObiektu'}
+useless_attributes = {'lokalnyId', 'przestrzenNazw', 'wersjaId', 'startObiekt', 'startWersjaObiekt',
+                      'podstawaUtworzeniaWersjiObiektu'}
 non_geometry_datas = {}
 
 for idx, layer in gpd.list_layers("Fixed.gml").iterrows():
@@ -36,7 +57,9 @@ for idx, layer in gpd.list_layers("Fixed.gml").iterrows():
         if name in name_to_pos:
             # add name as a column
             data['layer'] = name
-            data['color'] = random_color()
+            data['color'] = define_color(name)
+            data['weight'] = define_weight(name)
+
             # if its PunktGraniczny add wspolrzedne column with geometry
             # if name == "EGB_PunktGraniczny":
             #     data['Wspolrzedne'] = data['geometry']
@@ -54,24 +77,39 @@ for key, value in datas.items():
     datas_list[key] = value
 
 for data in datas_list:
-    fields = [key for key in data.columns if key != 'geometry']
-    # print(data['geometry'])
-    data['Wspolrzedne'] = ''
+    fields = [key for key in data.columns if key not in ['geometry', 'color', 'layer', 'gml_id']]
+
+    # Format 'Współrzędne' as a text field with a scrollbar
+    data['Współrzędne'] = ''
     for idx, row in data.iterrows():
-        data.loc[idx, 'Wspolrzedne'] = str(row['geometry'])[7:-1]
-    fields.append('Wspolrzedne')
-    #get current layer name
-    layer_name = data.iloc[0].layer
+        coords = str(row['geometry'])
+        layer_name = row['layer']
+        # Apply slicing based on layer name
+        if layer_name == 'EGB_Budynek':
+            formatted_coords = coords[16:-2]
+        elif layer_name in ['EGB_KonturKlasyfikacyjny', 'EGB_KonturUzytkuGruntowego', 'EGB_DzialkaEwidencyjna']:
+            formatted_coords = coords[10:-2]
+        elif layer_name in ['EGB_PunktGraniczny']:
+            formatted_coords = coords[7:-1]
+        else:
+            formatted_coords = coords  # Default formatting for other layers
+        # Format coordinates into a scrollable text field
+        data.loc[idx, 'Współrzędne'] = (
+            f"<textarea style='width: 100%; height: 100px; overflow: auto;' readonly>"
+            f"{formatted_coords}</textarea>"
+        )
+
+    fields.append('Współrzędne')
+
+    # Get current layer name
     geojson_layer = folium.GeoJson(
         data,
         style_function=lambda x: {'color': x['properties']['color']},
-        popup=folium.GeoJsonPopup(fields=fields),
+        popup=folium.GeoJsonPopup(fields=fields, max_width="500px"),  # Set popup width
         name=layer_name
     )
-    #add each geojson to layer control
+    # Add each GeoJSON to layer control
     fg = folium.FeatureGroup(name=layer_name, overlay=True, control=True, show=True).add_to(m)
     geojson_layer.add_to(fg)
-    
-folium.LayerControl().add_to(m)
 
 m.save("map.html")
