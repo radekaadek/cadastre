@@ -3,6 +3,7 @@ import folium
 import os
 import random
 import pandas as pd
+import branca
 
 data_dir = "data"
 if not os.path.exists(data_dir):
@@ -155,7 +156,7 @@ for key, value in datas.items():
 
 geojson_layers = dict()
 for data in datas_list:
-    fields = [key for key in data.columns if key not in ['geometry', 'color', 'layer', 'gml_id']]
+    fields = [key for key in data.columns if key not in ['geometry', 'color', 'layer', 'gml_id', 'weight']]
     
     # Format 'Współrzędne' as a text field with a scrollbar
     data['Współrzędne'] = ''
@@ -209,6 +210,23 @@ folium.TileLayer(
     name="Brak podkładu mapowego",
     show=False
 ).add_to(m)
+
+# Define the legend's HTML
+legend_html = '''
+<div style="position: fixed; 
+     bottom: 50px; left: 50px; width: 200px; height: 150px; 
+     border:2px solid grey; z-index:9999; font-size:14px;
+     background-color:white; opacity: 0.85;">
+     &nbsp; <b>Legenda</b> <br>
+     &nbsp; Kontur użytku gruntowego &nbsp; <i class="fa fa-circle" style="color:yellow"></i><br>
+     &nbsp; Kontur klasyfikacyjny &nbsp; <i class="fa fa-circle" style="color:blue"></i><br>
+     &nbsp; Działka ewidencyjna &nbsp; <i class="fa fa-circle" style="color:black"></i><br>
+     &nbsp; Budynek &nbsp; <i class="fa fa-circle" style="color:red"></i><br>
+</div>
+'''
+
+# Add the legend to the map
+m.get_root().html.add_child(folium.Element(legend_html))
 
 folium.LayerControl().add_to(m)
 m.save("map.html")
