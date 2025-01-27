@@ -49,6 +49,9 @@ for idx, layer in gpd.list_layers("Fixed.gml").iterrows():
     data = gpd.read_file("Fixed.gml", layer=name)
     usless_columns = [key for key in data.columns if key in useless_attributes]
     data.drop(usless_columns, axis=1, inplace=True)
+    # remove first character from column poleEwidencyjne
+    if 'poleEwidencyjne' in data.columns:
+        data['poleEwidencyjne'] = data['poleEwidencyjne'].str[1:]
     # rename JRG2 to JRG
     if 'JRG2' in data.columns:
         data.rename(columns={'JRG2': 'JRG'}, inplace=True)

@@ -77,6 +77,14 @@ for i in range(len(lines)):
         id = lines[i].split('"')[1]
         lines[i] = f'<egb:EGB_JednostkaRejestrowa>{id}</egb:EGB_JednostkaRejestrowa>\n'
 
+# change <egb:poleEwidencyjne uom="ha">0.1267</egb:poleEwidencyjne>
+# to
+# <egb:poleEwidencyjne uom="ha">a0.1267</egb:poleEwidencyjne>
+for i in range(len(lines)):
+    if '<egb:poleEwidencyjne uom="ha">' in lines[i]:
+        lines[i] = f"<egb:poleEwidencyjne uom='ha'>x{lines[i].split('>')[1]}>\n"
+
+
 # write to Fixed.gml
 with open(output_file, 'w') as f:
     f.writelines(lines)
